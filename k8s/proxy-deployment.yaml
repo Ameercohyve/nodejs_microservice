@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: proxy
-        image: <DOCKER_REGISTRY>/proxy:${GITHUB_SHA}
+        image: ameercohyve/proxy:latest
         ports:
         - containerPort: 80
 ---

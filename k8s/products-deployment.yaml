@@ -14,29 +14,35 @@ spec:
     spec:
       containers:
       - name: products
-        image: <DOCKER_REGISTRY>/products:${GITHUB_SHA}
+        image: ameercohyve/products:latest
         ports:
         - containerPort: 8002
         env:
         - name: APP_SECRET
           valueFrom:
             secretKeyRef:
-              name: products-secrets
+              name: app-secrets
               key: APP_SECRET
         - name: MONGODB_URI
           valueFrom:
             secretKeyRef:
-              name: products-secrets
-              key: MONGODB_URI
+              name: app-secrets
+              key: MONGODB_URI_PRODUCTS
         - name: MSG_QUEUE_URL
           valueFrom:
             secretKeyRef:
-              name: products-secrets
+              name: app-secrets
               key: MSG_QUEUE_URL
         - name: EXCHANGE_NAME
-          value: ONLINE_STORE
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: EXCHANGE_NAME
         - name: PORT
-          value: "8002"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: PORT_PRODUCTS
 ---
 apiVersion: v1
 kind: Service

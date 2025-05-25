@@ -14,29 +14,35 @@ spec:
     spec:
       containers:
       - name: shopping
-        image: <DOCKER_REGISTRY>/shopping:${GITHUB_SHA}
+        image: ameercohyve/shopping:latest
         ports:
         - containerPort: 8003
         env:
         - name: APP_SECRET
           valueFrom:
             secretKeyRef:
-              name: shopping-secrets
+              name: app-secrets
               key: APP_SECRET
         - name: MONGODB_URI
           valueFrom:
             secretKeyRef:
-              name: shopping-secrets
-              key: MONGODB_URI
+              name: app-secrets
+              key: MONGODB_URI_SHOPPING
         - name: MSG_QUEUE_URL
           valueFrom:
             secretKeyRef:
-              name: shopping-secrets
+              name: app-secrets
               key: MSG_QUEUE_URL
         - name: EXCHANGE_NAME
-          value: ONLINE_STORE
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: EXCHANGE_NAME
         - name: PORT
-          value: "8003"
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: PORT_SHOPPING
 ---
 apiVersion: v1
 kind: Service
