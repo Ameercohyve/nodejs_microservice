@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: customer
+  template:
+    metadata:
+      labels:
+        app: customer
+    spec:
+      containers:
+      - name: customer
+        image: <DOCKER_REGISTRY>/customer:${GITHUB_SHA}
+        ports:
+        - containerPort: 8001
+        env:
+        - name: APP_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: customer-secrets
+              key: APP_SECRET
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: customer-secrets
+              key: MONGODB_URI
+        - name: MSG_QUEUE_URL
+          valueFrom:
+            secretKeyRef:
+              name: customer-secrets
+              key: MSG_QUEUE_URL
+        - name: EXCHANGE_NAME
+          value: ONLINE_STORE
+        - name: PORT
+          value: "8001"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-service
+spec:
+  selector:
+    app: customer
+  ports:
+  - protocol: TCP
+    port: 8001
+    targetPort: 8001
+  type: ClusterIP

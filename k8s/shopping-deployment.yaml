@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopping-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shopping
+  template:
+    metadata:
+      labels:
+        app: shopping
+    spec:
+      containers:
+      - name: shopping
+        image: <DOCKER_REGISTRY>/shopping:${GITHUB_SHA}
+        ports:
+        - containerPort: 8003
+        env:
+        - name: APP_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: shopping-secrets
+              key: APP_SECRET
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: shopping-secrets
+              key: MONGODB_URI
+        - name: MSG_QUEUE_URL
+          valueFrom:
+            secretKeyRef:
+              name: shopping-secrets
+              key: MSG_QUEUE_URL
+        - name: EXCHANGE_NAME
+          value: ONLINE_STORE
+        - name: PORT
+          value: "8003"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopping-service
+spec:
+  selector:
+    app: shopping
+  ports:
+  - protocol: TCP
+    port: 8003
+    targetPort: 8003
+  type: ClusterIP
