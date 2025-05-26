@@ -10,8 +10,6 @@ NodeJS Microservice Architecture Example with realtime project
 </br>
 What you can learn from this repository?
 </br>
-https://youtu.be/EXDkgjU8DDU
-</br>
 </br>
 </br>
 
