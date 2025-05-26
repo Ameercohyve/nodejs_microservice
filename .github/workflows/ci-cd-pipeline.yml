@@ -30,8 +30,8 @@ jobs:
       - name: Build and push ${{ matrix.service }}
         uses: docker/build-push-action@v5
         with:
-          context: ./nodejs_microservice/${{ matrix.service }}
-          file: ./nodejs_microservice/${{ matrix.service }}/Dockerfile
+          context: ./${{ matrix.service }}
+          file: ./${{ matrix.service }}/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/${{ matrix.service }}:latest
 
@@ -59,8 +59,8 @@ jobs:
 
       - name: Deploy to EKS
         run: |
-          kubectl apply -f nodejs_microservice/k8s/secrets.yaml
-          kubectl apply -f nodejs_microservice/k8s/customer-deployment.yaml
-          kubectl apply -f nodejs_microservice/k8s/products-deployment.yaml
-          kubectl apply -f nodejs_microservice/k8s/shopping-deployment.yaml
-          kubectl apply -f nodejs_microservice/k8s/proxy-deployment.yaml
+          kubectl apply -f k8s/secrets.yaml
+          kubectl apply -f k8s/customer-deployment.yaml
+          kubectl apply -f k8s/products-deployment.yaml
+          kubectl apply -f k8s/shopping-deployment.yaml
+          kubectl apply -f k8s/proxy-deployment.yaml
